@@ -1,0 +1,8 @@
+{
+  "name": "ng-redux-flappy-bird",
+  "app_id": "",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
