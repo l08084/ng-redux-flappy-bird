@@ -3,15 +3,15 @@ import { NavController } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
-  template: '<img #bird class="bird" src="assets/imgs/bird.png">'
+  templateUrl: 'home.html'
 })
 export class HomePage implements AfterViewInit {
 
   @ViewChild('bird') bird: ElementRef;
-  // maxY: number;
+  maxY: number;
 
   constructor(public navCtrl: NavController) {}
-  
+
   ngAfterViewInit() {
     const height = this.bird.nativeElement.offsetHeight;
     const width = this.bird.nativeElement.offsetWidth;
@@ -21,10 +21,7 @@ export class HomePage implements AfterViewInit {
   }
 
   init = (): void => {
-    const height = this.bird.nativeElement.offsetHeight;
-    const width = this.bird.nativeElement.offsetWidth;
-    console.log(`height: ${height}`);
-    console.log(`width: ${width}`);
+    this.maxY = window.innerHeight - this.bird.nativeElement.height;
   }
 
 }
