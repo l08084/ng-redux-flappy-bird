@@ -12,6 +12,8 @@ import { IAppState, INITIAL_STATE } from '../state/store';
 import { rootReducer } from '../state/reducer';
 import { FlappyBirdActions } from '../state/action';
 
+import 'rxjs/Rx';
+
 @NgModule({
   declarations: [
     MyApp,
