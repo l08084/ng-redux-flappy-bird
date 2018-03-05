@@ -3,6 +3,7 @@ import { FluxStandardAction } from 'flux-standard-action';
 import { dispatch } from '@angular-redux/store';
 
 export type NumberAction = FluxStandardAction<number, void>;
+export type VoidAction = FluxStandardAction<void, void>;
 
 @Injectable()
 export class FlappyBirdActions {
@@ -10,6 +11,7 @@ export class FlappyBirdActions {
   static SET_AY = 'SET_AY';
   static SET_VY = 'SET_VY';
   static SET_Y = 'SET_Y';
+  static MOVE_BIRD = 'MOVE_BIRD';
 
   @dispatch() setMaxY = (maxY: number): NumberAction => ({
     type: FlappyBirdActions.SET_MAX_Y,
@@ -32,6 +34,12 @@ export class FlappyBirdActions {
   @dispatch() setY = (y: number): NumberAction => ({
     type: FlappyBirdActions.SET_Y,
     payload: y,
+    meta: undefined
+  })
+
+  @dispatch() moveBird = (): VoidAction => ({
+    type: FlappyBirdActions.MOVE_BIRD,
+    payload: undefined,
     meta: undefined
   })
 }

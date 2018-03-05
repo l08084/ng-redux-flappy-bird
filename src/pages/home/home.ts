@@ -35,13 +35,11 @@ export class HomePage implements AfterViewInit {
 
   start = (): void => {
     this.subScription = Observable.interval(20)
-      .subscribe(() => this.moveBird());
+      .subscribe(() => this.action.moveBird());
   }
 
   end = (): void => {
     this.subScription.unsubscribe();
   }
-
-  moveBird = (): void => {}
 
 }

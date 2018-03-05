@@ -4,6 +4,7 @@ export interface IAppState {
     vy: number;
     y: number;
     birdPosition: {};
+    isEnd: boolean;
 }
 
 export const INITIAL_STATE: IAppState = {
@@ -12,4 +13,5 @@ export const INITIAL_STATE: IAppState = {
     vy: 0,
     y: 0,
     birdPosition: {},
+    isEnd: false,
 };
