@@ -1,5 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { FlappyBirdActions } from '../../state/action';
+import { Observable } from 'rxjs/Observable';
+import { select } from '@angular-redux/store';
 
 @Component({
   selector: 'page-home',
@@ -8,20 +10,20 @@ import { NavController } from 'ionic-angular';
 export class HomePage implements AfterViewInit {
 
   @ViewChild('bird') bird: ElementRef;
-  maxY: number;
 
-  constructor(public navCtrl: NavController) {}
+  @select() readonly maxY$: Observable<number>;
+
+  constructor(private action: FlappyBirdActions) {}
 
   ngAfterViewInit() {
-    const height = this.bird.nativeElement.offsetHeight;
-    const width = this.bird.nativeElement.offsetWidth;
-    // ViewChildで取得した要素のサイズを表示する
-    console.log(`height: ${height}`);
-    console.log(`width: ${width}`);
+    this.maxY$.subscribe(console.log);
+    this.init();
   }
 
   init = (): void => {
-    this.maxY = window.innerHeight - this.bird.nativeElement.height;
+    const maxY: number
+      = window.innerHeight - this.bird.nativeElement.height;
+    this.action.setMaxY(maxY);
   }
 
 }

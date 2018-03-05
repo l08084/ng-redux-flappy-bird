@@ -7,6 +7,11 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 
+import { NgReduxModule, NgRedux } from '@angular-redux/store';
+import { IAppState, INITIAL_STATE } from '../state/store';
+import { rootReducer } from '../state/reducer';
+import { FlappyBirdActions } from '../state/action';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -14,6 +19,7 @@ import { HomePage } from '../pages/home/home';
   ],
   imports: [
     BrowserModule,
+    NgReduxModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -24,7 +30,13 @@ import { HomePage } from '../pages/home/home';
   providers: [
     StatusBar,
     SplashScreen,
+    FlappyBirdActions,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
-export class AppModule {}
+export class AppModule {
+  constructor(ngRedux: NgRedux<IAppState>) {
+    ngRedux.configureStore(rootReducer,
+      INITIAL_STATE);
+  }
+}
