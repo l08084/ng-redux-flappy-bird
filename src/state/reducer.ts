@@ -14,7 +14,7 @@ export function rootReducer(
           vy: lastState.vy,
           y: lastState.y,
           birdPosition: lastState.birdPosition,
-          isEnd: lastState.isEnd,
+          isEnd: false,
         };
       case FlappyBirdActions.SET_AY:
       return {
@@ -23,7 +23,7 @@ export function rootReducer(
           vy: lastState.vy,
           y: lastState.y,
           birdPosition: lastState.birdPosition,
-          isEnd: lastState.isEnd,
+          isEnd: false,
         };
       case FlappyBirdActions.SET_VY:
       return {
@@ -32,7 +32,7 @@ export function rootReducer(
           vy: (action as NumberAction).payload,
           y: lastState.y,
           birdPosition: lastState.birdPosition,
-          isEnd: lastState.isEnd,
+          isEnd: false,
         };
       case FlappyBirdActions.SET_Y:
       return {
@@ -41,21 +41,35 @@ export function rootReducer(
           vy: lastState.vy,
           y: (action as NumberAction).payload,
           birdPosition: {top: `${(action as NumberAction).payload}px`},
-          isEnd: lastState.isEnd,
+          isEnd: false,
         };
       case FlappyBirdActions.MOVE_BIRD:
       const newVy = lastState.vy + lastState.ay;
       let newY = lastState.y + newVy;
+      let newIsEnd = lastState.isEnd;
       if (newY < 0) {
         newY = 0;
+      } else if (newY > lastState.maxY) {
+        // 地面に衝突したらゲーム終了
+        newIsEnd = true;
       }
       return {
           maxY: lastState.maxY,
           ay: lastState.ay,
-          vy: lastState.vy,
-          y: (action as NumberAction).payload,
-          birdPosition: {top: `${(action as NumberAction).payload}px`},
-          isEnd: lastState.isEnd,
+          vy: newVy,
+          y: newY,
+          birdPosition:  {top: `${newY}px`},
+          isEnd: newIsEnd,
+        };
+      case FlappyBirdActions.FLY:
+      const minusVy = lastState.vy - 10;
+      return {
+          maxY: lastState.maxY,
+          ay: lastState.ay,
+          vy: minusVy,
+          y: lastState.y,
+          birdPosition: lastState.birdPosition,
+          isEnd: false,
         };
     default:
       return lastState;

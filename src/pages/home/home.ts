@@ -16,11 +16,18 @@ export class HomePage implements AfterViewInit {
 
   @select() readonly maxY$: Observable<number>;
   @select() readonly birdPosition$: Observable<any>;
+  @select() readonly isEnd$: Observable<boolean>;
 
   constructor(private action: FlappyBirdActions) {}
 
   ngAfterViewInit() {
     this.init();
+    Observable
+      .fromEvent(document, 'click')
+      .subscribe(_ => this.action.fly());
+    this.isEnd$
+      .filter(value => value)
+      .subscribe(_ => this.end());
   }
 
   init = (): void => {
@@ -39,7 +46,9 @@ export class HomePage implements AfterViewInit {
   }
 
   end = (): void => {
-    this.subScription.unsubscribe();
+    if (this.subScription) {
+      this.subScription.unsubscribe();
+    }
   }
 
 }
