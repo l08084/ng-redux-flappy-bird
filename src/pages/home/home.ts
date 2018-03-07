@@ -12,7 +12,7 @@ import { GameService } from '../../services/game.service';
 export class HomePage implements AfterViewInit {
 
   subScription: Subscription;
-  enemySubScription: Subscription;
+  wallSubScription: Subscription;
 
   @ViewChild('bird') bird: ElementRef;
 
@@ -27,33 +27,43 @@ export class HomePage implements AfterViewInit {
             ) {}
 
   ngAfterViewInit() {
-    this.init();
-    Observable
-      .fromEvent(document, 'click')
-      .subscribe(_ => this.action.fly());
-    this.isEnd$
-      .filter(value => value)
-      .subscribe(_ => this.end());
+    Observable.interval(10000)
+    .subscribe(() => this.setWall()).unsubscribe();
+    // this.setWall();
+    this.wallSubScription = Observable.interval(10000)
+      .subscribe(() => this.setWall());
+    // this.init();
+    // Observable
+    //   .fromEvent(document, 'click')
+    //   .subscribe(_ => this.action.fly());
+    // this.isEnd$
+    //   .filter(value => value)
+    //   .subscribe(_ => this.end());
   }
 
-  genEnemy = (): void => {
+  setWall = (): void => {
     const maxX = window.innerWidth;
-    const pos = 20 + Math.random() * 60;
+    // const pos = 20 + Math.random() * 60;
 
-    const enemyTop = this.renderer2.createElement('div');
-    const enemyBottom = this.renderer2.createElement('div');
+    const pos = 40;
 
-    this.renderer2.addClass(enemyTop, 'enemy');
-    this.renderer2.addClass(enemyBottom, 'enemy');
+    const wallTop = this.renderer2.createElement('div');
+    const wallBottom = this.renderer2.createElement('div');
 
-    this.renderer2.setStyle(enemyTop, 'bottom', `${pos + 10}%`);
-    this.renderer2.setStyle(enemyBottom, 'top', `${(100 - pos) + 10}%`);
+    this.renderer2.addClass(wallTop, 'wall');
+    this.renderer2.addClass(wallBottom, 'wall');
 
-    this.renderer2.setStyle(enemyTop, 'left', `${maxX}px`);
-    this.renderer2.setStyle(enemyBottom, 'left', `${maxX}px`);
+    this.renderer2.setStyle(wallTop, 'bottom', `${pos + 10}%`);
+    this.renderer2.setStyle(wallBottom, 'top', `${(100 - pos) + 10}%`);
 
-    this.renderer2.appendChild(this.el.nativeElement, enemyTop);
-    this.renderer2.appendChild(this.el.nativeElement, enemyBottom);
+    // this.renderer2.setStyle(wallTop, 'left', `${maxX}px`);
+    // this.renderer2.setStyle(wallBottom, 'left', `${maxX}px`);
+
+    this.renderer2.setStyle(wallTop, 'left', `400px`);
+    this.renderer2.setStyle(wallBottom, 'left', `400px`);
+
+    this.renderer2.appendChild(this.el.nativeElement, wallTop);
+    this.renderer2.appendChild(this.el.nativeElement, wallBottom);
   }
 
   init = (): void => {
@@ -69,16 +79,16 @@ export class HomePage implements AfterViewInit {
   start = (): void => {
     this.subScription = Observable.interval(20)
       .subscribe(() => this.action.moveBird());
-    this.enemySubScription = Observable.interval(2000)
-      .subscribe(() => this.genEnemy());
+    // this.wallSubScription = Observable.interval(2000)
+    //   .subscribe(() => this.genwall());
   }
 
   end = (): void => {
     if (this.subScription) {
       this.subScription.unsubscribe();
     }
-    if (this.enemySubScription) {
-      this.enemySubScription.unsubscribe();
+    if (this.wallSubScription) {
+      this.wallSubScription.unsubscribe();
     }
   }
 

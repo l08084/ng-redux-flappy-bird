@@ -1,18 +1,17 @@
 page-home {
-    background-image: url(../assets/imgs/isometropolis.jpg);
+    // background-image: url(../assets/imgs/isometropolis.jpg);
+    background-color: greenyellow;
 
   .bird {
-      height: 5%;
+      height: 10%;
       position: absolute;
       left: 10%;
   }
 
-  .enemy {
+  .wall {
       background-image: url(../assets/imgs/stone.jpg);
       width: 10%;
       height: 100%;
       position: absolute;
-      top: 50%;
-      left: 50%;
   }
 }
