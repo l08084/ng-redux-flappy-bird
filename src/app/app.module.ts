@@ -13,6 +13,7 @@ import { rootReducer } from '../state/reducer';
 import { FlappyBirdActions } from '../state/action';
 
 import 'rxjs/Rx';
+import { GameService } from '../services/game.service';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import 'rxjs/Rx';
   providers: [
     StatusBar,
     SplashScreen,
+    GameService,
     FlappyBirdActions,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

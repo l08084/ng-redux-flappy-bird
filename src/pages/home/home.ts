@@ -1,8 +1,9 @@
-import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Renderer2 } from '@angular/core';
 import { FlappyBirdActions } from '../../state/action';
 import { Observable } from 'rxjs/Observable';
 import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs';
+import { GameService } from '../../services/game.service';
 
 @Component({
   selector: 'page-home',
@@ -11,6 +12,7 @@ import { Subscription } from 'rxjs';
 export class HomePage implements AfterViewInit {
 
   subScription: Subscription;
+  enemySubScription: Subscription;
 
   @ViewChild('bird') bird: ElementRef;
 
@@ -18,7 +20,11 @@ export class HomePage implements AfterViewInit {
   @select() readonly birdPosition$: Observable<any>;
   @select() readonly isEnd$: Observable<boolean>;
 
-  constructor(private action: FlappyBirdActions) {}
+  constructor(private action: FlappyBirdActions,
+              private service: GameService,
+              private renderer2: Renderer2,
+              private el: ElementRef,
+            ) {}
 
   ngAfterViewInit() {
     this.init();
@@ -28,6 +34,26 @@ export class HomePage implements AfterViewInit {
     this.isEnd$
       .filter(value => value)
       .subscribe(_ => this.end());
+  }
+
+  genEnemy = (): void => {
+    const maxX = window.innerWidth;
+    const pos = 20 + Math.random() * 60;
+
+    const enemyTop = this.renderer2.createElement('div');
+    const enemyBottom = this.renderer2.createElement('div');
+
+    this.renderer2.addClass(enemyTop, 'enemy');
+    this.renderer2.addClass(enemyBottom, 'enemy');
+
+    this.renderer2.setStyle(enemyTop, 'bottom', `${pos + 10}%`);
+    this.renderer2.setStyle(enemyBottom, 'top', `${(100 - pos) + 10}%`);
+
+    this.renderer2.setStyle(enemyTop, 'left', `${maxX}px`);
+    this.renderer2.setStyle(enemyBottom, 'left', `${maxX}px`);
+
+    this.renderer2.appendChild(this.el.nativeElement, enemyTop);
+    this.renderer2.appendChild(this.el.nativeElement, enemyBottom);
   }
 
   init = (): void => {
@@ -43,11 +69,16 @@ export class HomePage implements AfterViewInit {
   start = (): void => {
     this.subScription = Observable.interval(20)
       .subscribe(() => this.action.moveBird());
+    this.enemySubScription = Observable.interval(2000)
+      .subscribe(() => this.genEnemy());
   }
 
   end = (): void => {
     if (this.subScription) {
       this.subScription.unsubscribe();
+    }
+    if (this.enemySubScription) {
+      this.enemySubScription.unsubscribe();
     }
   }
 
