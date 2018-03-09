@@ -85,9 +85,25 @@ export class HomePage implements AfterViewInit {
     this.start();
   }
 
+  checkCollision = () => {
+    const wallList = document.getElementsByClassName('wall');
+    const birdRect = this.bird.nativeElement.getBoundingClientRect();
+    for (let i = 0; i < wallList.length; i++) {
+      let wallRect = wallList[i].getBoundingClientRect();
+      if (wallRect.left < birdRect.right && birdRect.left < wallRect.right) {
+        if (wallRect.top < birdRect.bottom && birdRect.top < wallRect.bottom) {
+          this.end();
+        }
+      }
+    }
+  }
+
   start = (): void => {
     this.subscription = Observable.interval(20)
-      .subscribe(() => this.action.moveBird());
+      .subscribe(() => {
+        this.action.moveBird();
+        this.checkCollision();
+      });
     this.wallSubscription = Observable.interval(2000)
       .subscribe(() => this.setWall());
     this.moveWallSubscription = Observable.interval(20)
