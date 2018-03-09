@@ -39,7 +39,7 @@ export class HomePage implements AfterViewInit {
       .subscribe(_ => this.end());
     this.backgroundX$
       .subscribe(
-        value => document.body.style.backgroundPosition = `${value}px`);
+        value => this.el.nativeElement.style.backgroundPosition  = `${value}px`);
   }
 
   setWall = (): void => {
