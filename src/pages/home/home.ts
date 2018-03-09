@@ -11,14 +11,17 @@ import { GameService } from '../../services/game.service';
 })
 export class HomePage implements AfterViewInit {
 
-  subScription: Subscription;
-  wallSubScription: Subscription;
+  subscription: Subscription;
+  wallSubscription: Subscription;
+  moveWallSubscription: Subscription;
+  moveBackgroundSubscription: Subscription;
 
   @ViewChild('bird') bird: ElementRef;
 
   @select() readonly maxY$: Observable<number>;
   @select() readonly birdPosition$: Observable<any>;
   @select() readonly isEnd$: Observable<boolean>;
+  @select() readonly backgroundX$: Observable<number>;
 
   constructor(private action: FlappyBirdActions,
               private service: GameService,
@@ -34,6 +37,9 @@ export class HomePage implements AfterViewInit {
     this.isEnd$
       .filter(value => value)
       .subscribe(_ => this.end());
+    this.backgroundX$
+      .subscribe(
+        value => document.body.style.backgroundPosition = `${value}px`);
   }
 
   setWall = (): void => {
@@ -57,14 +63,17 @@ export class HomePage implements AfterViewInit {
   }
 
   moveWall = (): void => {
-    const wallList: HTMLCollectionOf<Element> = document.getElementsByClassName('wall');
-    for (let i = 0; )
-    for (let wall of wallList) {
-
+    const wallList = document.getElementsByClassName('wall') as HTMLCollectionOf<HTMLElement>;
+    for (let i = 0; i < wallList.length; i++) {
+      let left = parseInt(wallList[i].style.left.replace(/px/, ''));
+      left -= 10;
+      if (left < -wallList[i].getBoundingClientRect().width) {
+        wallList[i].remove();
+      } else {
+        wallList[i].style.left = `${left}px`;
+      }
     }
-
   }
-
 
   init = (): void => {
     const maxY: number
@@ -77,18 +86,28 @@ export class HomePage implements AfterViewInit {
   }
 
   start = (): void => {
-    this.subScription = Observable.interval(20)
+    this.subscription = Observable.interval(20)
       .subscribe(() => this.action.moveBird());
-    this.wallSubScription = Observable.interval(2000)
+    this.wallSubscription = Observable.interval(2000)
       .subscribe(() => this.setWall());
+    this.moveWallSubscription = Observable.interval(20)
+      .subscribe(() => this.moveWall());
+    this.moveBackgroundSubscription = Observable.interval(20)
+      .subscribe(() => this.action.moveBackground());
   }
 
   end = (): void => {
-    if (this.subScription) {
-      this.subScription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
-    if (this.wallSubScription) {
-      this.wallSubScription.unsubscribe();
+    if (this.wallSubscription) {
+      this.wallSubscription.unsubscribe();
+    }
+    if (this.moveWallSubscription) {
+      this.moveWallSubscription.unsubscribe();
+    }
+    if (this.moveBackgroundSubscription) {
+      this.moveBackgroundSubscription.unsubscribe();
     }
   }
 

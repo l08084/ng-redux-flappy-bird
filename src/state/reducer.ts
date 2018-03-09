@@ -15,6 +15,7 @@ export function rootReducer(
           y: lastState.y,
           birdPosition: lastState.birdPosition,
           isEnd: false,
+          backgroundX: lastState.backgroundX,
         };
       case FlappyBirdActions.SET_AY:
       return {
@@ -24,6 +25,7 @@ export function rootReducer(
           y: lastState.y,
           birdPosition: lastState.birdPosition,
           isEnd: false,
+          backgroundX: lastState.backgroundX,
         };
       case FlappyBirdActions.SET_VY:
       return {
@@ -33,6 +35,7 @@ export function rootReducer(
           y: lastState.y,
           birdPosition: lastState.birdPosition,
           isEnd: false,
+          backgroundX: lastState.backgroundX,
         };
       case FlappyBirdActions.SET_Y:
       return {
@@ -42,6 +45,7 @@ export function rootReducer(
           y: (action as NumberAction).payload,
           birdPosition: {top: `${(action as NumberAction).payload}px`},
           isEnd: false,
+          backgroundX: lastState.backgroundX,
         };
       case FlappyBirdActions.MOVE_BIRD:
       const newVy = lastState.vy + lastState.ay;
@@ -60,6 +64,7 @@ export function rootReducer(
           y: newY,
           birdPosition:  {top: `${newY}px`},
           isEnd: newIsEnd,
+          backgroundX: lastState.backgroundX,
         };
       case FlappyBirdActions.FLY:
       const minusVy = lastState.vy - 10;
@@ -70,6 +75,18 @@ export function rootReducer(
           y: lastState.y,
           birdPosition: lastState.birdPosition,
           isEnd: false,
+          backgroundX: lastState.backgroundX,
+        };
+      case FlappyBirdActions.MOVE_BACKGROUND:
+      const newBackgroundX = lastState.backgroundX - 10;
+      return {
+          maxY: lastState.maxY,
+          ay: lastState.ay,
+          vy: lastState.vy,
+          y: lastState.y,
+          birdPosition: lastState.birdPosition,
+          isEnd: false,
+          backgroundX: newBackgroundX,
         };
     default:
       return lastState;
