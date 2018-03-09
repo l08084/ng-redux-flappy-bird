@@ -52,8 +52,8 @@ export class HomePage implements AfterViewInit {
     this.renderer2.addClass(wallTop, 'wall');
     this.renderer2.addClass(wallBottom, 'wall');
 
-    this.renderer2.setStyle(wallTop, 'bottom', `${pos + 10}%`);
-    this.renderer2.setStyle(wallBottom, 'top', `${(100 - pos) + 10}%`);
+    this.renderer2.setStyle(wallTop, 'bottom', `${pos + 15}%`);
+    this.renderer2.setStyle(wallBottom, 'top', `${(100 - pos) + 15}%`);
 
     this.renderer2.setStyle(wallTop, 'left', `${maxX}px`);
     this.renderer2.setStyle(wallBottom, 'left', `${maxX}px`);
@@ -104,11 +104,11 @@ export class HomePage implements AfterViewInit {
         this.action.moveBird();
         this.checkCollision();
       });
-    this.wallSubscription = Observable.interval(2000)
+    this.wallSubscription = Observable.interval(3000)
       .subscribe(() => this.setWall());
-    this.moveWallSubscription = Observable.interval(20)
+    this.moveWallSubscription = Observable.interval(30)
       .subscribe(() => this.moveWall());
-    this.moveBackgroundSubscription = Observable.interval(20)
+    this.moveBackgroundSubscription = Observable.interval(30)
       .subscribe(() => this.action.moveBackground());
   }
 
